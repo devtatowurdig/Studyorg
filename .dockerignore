@@ -1,0 +1,19 @@
+# Root-level fallback for builds started from the workspace root.
+**/node_modules
+**/dist
+**/.angular
+**/coverage
+**/generated
+
+# Never bake local secrets into images.
+**/.env
+**/.env.*
+
+# VCS/editor noise.
+.git
+.gitignore
+**/.vscode
+**/.idea
+
+# Local logs.
+**/npm-debug.log*
