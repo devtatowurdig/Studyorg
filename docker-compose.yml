@@ -20,7 +20,6 @@ services:
     build:
       context: ./study-org-backend
       dockerfile: Dockerfile
-      target: runtime
     container_name: study-org-backend-dev
     restart: unless-stopped
     depends_on:
