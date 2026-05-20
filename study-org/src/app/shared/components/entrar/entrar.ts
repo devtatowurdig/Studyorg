@@ -5,10 +5,10 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { faArrowRight, faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons';
 import { finalize } from 'rxjs';
-import { AuthService } from '../../../core/services/auth.service';
 import { InputLogin } from "../input-login/input-login";
 import { apiFetch, getApiErrorMessage } from '../../services/api.service';
 import { AuthService } from '../../services/auth.service';
+import { AuthSessionService } from '../../../core/services/auth-session.service';
 
 type LoginResponse = {
   accessToken: string;
@@ -32,12 +32,14 @@ export class Entrar {
   private readonly router = inject(Router);
   private readonly formBuilder = inject(FormBuilder);
   private readonly authService = inject(AuthService);
+  private readonly authSession = inject(AuthSessionService);
 
   emailIcon = faEnvelope;
   arrowIcon = faArrowRight;
   lockIcon: IconDefinition = faLock;
   readonly isSubmitting = signal(false);
   readonly formError = signal('');
+  readonly errorMessage = signal('');
 
   readonly loginForm = this.formBuilder.nonNullable.group({
     email: ['', [Validators.required, Validators.email]],
@@ -65,6 +67,14 @@ export class Entrar {
           rememberMe: payload.rememberMe,
         }),
       });
+
+      // Save token(s) in both session service (used by guards) and shared token helper
+      try {
+        // Response matches StoredSession shape: accessToken, refreshToken, expiresIn, user
+        this.authSession.setSession(response as any);
+      } catch (e) {
+        console.warn('[Entrar] failed to set session on AuthSessionService', e);
+      }
 
       this.authService.setToken(response.accessToken);
       await this.router.navigate(['/dashboard']);
