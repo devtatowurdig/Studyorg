@@ -11,7 +11,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:?set POSTGRES_USER in .env}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
     ports:
-      - "${POSTGRES_PORT:-5432}:5432"
+      - "3072:5432"
     volumes:
       - postgres_data_dev:/var/lib/postgresql/data
 
@@ -30,7 +30,7 @@ services:
       API_PORT: ${API_PORT:-3000}
       JWT_SECRET: ${JWT_SECRET:?set JWT_SECRET in .env}
     ports:
-      - "${API_PORT:-3000}:3000"
+      - "3071:3000"
     volumes:
       # Bind mount enables hot reload while named volumes protect container deps.
       - ./study-org-backend:/app
@@ -38,11 +38,11 @@ services:
       - backend_generated:/app/generated
     command: sh -c "npm run prisma:generate && npm run prisma:push && npm run dev"
     healthcheck:
-      test: ["CMD", "sh", "/app/healthcheck.sh"]
-      interval: 30s
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3071/"]
+      interval: 10s
       timeout: 5s
-      start_period: 20s
-      retries: 3
+      retries: 5
+      start_period: 10s
 
   frontend:
     # Dev server image for Angular hot reload.
@@ -56,18 +56,13 @@ services:
     environment:
       CHOKIDAR_USEPOLLING: "true"
     ports:
-      - "${FRONTEND_PORT:-4200}:4200"
+      - "3070:4200"
     volumes:
       # Bind mount enables Angular hot reload while node_modules stays in Docker.
       - ./study-org:/app
       - frontend_node_modules:/app/node_modules
     command: sh -c "npm install && npm start -- --host 0.0.0.0 --port 4200"
-    healthcheck:
-      test: ["CMD", "sh", "/app/healthcheck.sh"]
-      interval: 30s
-      timeout: 5s
-      start_period: 30s
-      retries: 3
+
 
 volumes:
   postgres_data_dev:

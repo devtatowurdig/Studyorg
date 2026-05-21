@@ -180,18 +180,11 @@
         </button>
       </footer>
 
-      @if (errorMessage()) {
-        <p class="mt-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
-          {{ errorMessage() }}
-        </p>
-      }
-
       @if (saveMessage()) {
         <p class="mt-3 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
           {{ saveMessage() }}
         </p>
       }
-
       @if (saveError()) {
         <p class="mt-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
           {{ saveError() }}
