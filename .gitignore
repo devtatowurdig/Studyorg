@@ -1,0 +1,25 @@
+# .gitignore (raiz do monorepo)
+# Node
+node_modules/
+# Build
+/dist
+/tmp
+/out-tsc
+/bazel-out
+# IDEs
+.idea/
+.vscode/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+# Logs
+npm-debug.log
+yarn-error.log
+# Outros
+.history/
+generated/
+.env
+.env.*
