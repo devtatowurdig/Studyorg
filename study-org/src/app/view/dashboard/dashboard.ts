@@ -1,3 +1,23 @@
+// Reimplementação das interfaces removidas
+type Priority = 'alta' | 'media' | 'baixa';
+// type TaskStatus = 'pending' | 'completed' | 'overdue'; // Removido para evitar conflito com import
+interface StudyTask {
+  id: string;
+  title: string;
+  course: string;
+  date: string;
+  time: string | null;
+  deadlineLabel: string;
+  priority: Priority;
+  status: TaskStatus;
+  done: boolean;
+}
+interface FocusItem {
+  id: string;
+  title: string;
+  subtitle: string;
+  tone: 'amber' | 'cyan';
+}
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -18,38 +38,7 @@ import { AppLayout } from '../../shared/components/layout/app-layout/app-layout'
 import { apiFetch, getApiErrorMessage } from '../../shared/services/api.service';
 import { AuthService } from '../../shared/services/auth.service';
 
-type Priority = 'alta' | 'media' | 'baixa';
-type TaskStatus = 'pending' | 'completed' | 'overdue';
-
-interface StudyTask {
-  id: string;
-  title: string;
-  course: string;
-  date: string;
-  time: string | null;
-  deadlineLabel: string;
-  priority: Priority;
-  status: TaskStatus;
-  done: boolean;
-}
-
-interface FocusItem {
-  id: string;
-  title: string;
-  subtitle: string;
-  tone: 'amber' | 'cyan';
-}
-
-interface DashboardSummary {
-  userName: string;
-  stats: {
-    todayTasks: number;
-    overdueTasks: number;
-    nextDeadlineIn: string | null;
-    weeklyAverage: number;
-  };
-  focusItems: FocusItem[];
-}
+// Tipos já importados dos models
 
 interface TasksResponse {
   items: Array<{
@@ -99,10 +88,10 @@ export class Dashboard {
     const term = this.search().trim().toLowerCase();
 
     if (!term) {
-      return tasks;
+      return this.tasks();
     }
 
-    return tasks.filter((task) => {
+    return this.tasks().filter((task) => {
       return (
         task.title.toLowerCase().includes(term) ||
         task.course.toLowerCase().includes(term) ||

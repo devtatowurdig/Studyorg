@@ -9,4 +9,4 @@ COPY healthcheck.sh /usr/local/bin/postgres-healthcheck
 
 RUN chmod +x /usr/local/bin/postgres-healthcheck
 
-HEALTHCHECK --interval=10s --timeout=5s --start-period=10s --retries=10 CMD ["postgres-healthcheck"]
+HEALTHCHECK --interval=10s --timeout=5s --start-period=10s --retries=10 CMD pg_isready -U study_org -d study_org -h localhost

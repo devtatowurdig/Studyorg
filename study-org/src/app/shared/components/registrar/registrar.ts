@@ -11,6 +11,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { apiFetch, getApiErrorMessage } from '../../services/api.service';
+import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
 
 function passwordsMatchValidator(control: AbstractControl): ValidationErrors | null {
   const group = control as {

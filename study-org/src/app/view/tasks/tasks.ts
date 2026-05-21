@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { startWith } from 'rxjs';
 import {
   faCalendarDays,
   faCircleInfo,
@@ -10,20 +11,16 @@ import {
   faTags,
   faXmark,
 } from '@fortawesome/free-solid-svg-icons';
-import { finalize } from 'rxjs';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Task, TaskPriority, TaskRecurrence } from '../../core/models/task.model';
-import { TasksService } from '../../core/services/tasks.service';
 import { AppLayout } from '../../shared/components/layout/app-layout/app-layout';
 import { apiFetch, getApiErrorMessage } from '../../shared/services/api.service';
 import { AuthService } from '../../shared/services/auth.service';
-import { startWith } from 'rxjs';
 
 type Priority = 'baixa' | 'media' | 'alta';
 type Recurrence = 'none' | 'daily' | 'weekly' | 'monthly';
 
 interface PriorityOption {
-  value: TaskPriority;
+  value: TaskPriority | Priority;
   label: string;
 }
 
@@ -44,6 +41,15 @@ export class Tasks {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
+
+  readonly allTasks = signal<any[]>([]);
+
+  recentTasks() {
+    return this.allTasks()
+      .filter((task: any) => !task.done)
+      .sort((a: any, b: any) => new Date(b.dueDate).getTime() - new Date(a.dueDate).getTime())
+      .slice(0, 5);
+  }
 
   readonly search = signal('');
   readonly isSubmitting = signal(false);
@@ -98,8 +104,9 @@ export class Tasks {
     this.search.set(value);
   }
 
-  selectPriority(priority: TaskPriority): void {
-    this.taskForm.controls.priority.setValue(priority);
+  selectPriority(priority: TaskPriority | Priority): void {
+    // normalize to string priority if necessary
+    this.taskForm.controls.priority.setValue(priority as any);
   }
 
   addTag(): void {
