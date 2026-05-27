@@ -68,7 +68,7 @@
             "host": "0.0.0.0",
             "port": 4200,
             "poll": 2000,
-            "allowedHosts": "all"
+            "allowedHosts": ["studyorg.frameworksenac.com.br"]
           },
           "configurations": {
             "production": {
