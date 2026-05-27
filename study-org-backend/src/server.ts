@@ -12,37 +12,13 @@ const port = process.env.API_PORT || 3000;
 
 // Configure CORS to allow requests from frontend
 const corsOptions = {
-  origin: process.env.FRONTEND_URL || "http://localhost:3070",
+  origin: "frontend:3070",
   credentials: true,
   optionsSuccessStatus: 200,
 };
 
-// Support multiple frontend URLs (dev and production)
-const allowedOrigins = [
-  process.env.FRONTEND_URL || "http://localhost:3070",
-  "http://localhost:3070",
-  "http://localhost:4200",
-  "http://127.0.0.1:3070",
-  "http://127.0.0.1:4200",
-  "http://studyorg.frameworksenac.com.br:3070",
-  "https://studyorg.frameworksenac.com.br:3070",
-  "http://studyorg.frameworksenac.com.br",
-  "https://studyorg.frameworksenac.com.br",
-];
 
-const corsOptionsWithMultipleOrigins = {
-  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  credentials: true,
-  optionsSuccessStatus: 200,
-};
-
-app.use(cors(corsOptionsWithMultipleOrigins));
+app.use(cors());
 app.use(express.json());
 
 app.get("/", (_req, res) => {
