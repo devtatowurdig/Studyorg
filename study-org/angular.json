@@ -67,7 +67,13 @@
           "builder": "@angular/build:dev-server",
           "options": {
             "poll": 2000,
-            "allowedHosts": ["studyorg.frameworksenac.com.br"]
+            "allowedHosts": [
+              "studyorg.frameworksenac.com.br",
+              "studyorg.frameworksenac.com.br:4200",
+              "studyorg.frameworksenac.com.br:3070",
+              "localhost",
+              "127.0.0.1"
+            ]
           },
           "configurations": {
             "production": {
