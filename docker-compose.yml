@@ -31,7 +31,7 @@ services:
       JWT_SECRET: ${JWT_SECRET:?set JWT_SECRET in .env}
       FRONTEND_URL: http://localhost:${FRONTEND_PORT:-3070}
     ports:
-      - "3071:3000"
+      - "${API_PUBLIC_PORT:-3071}:${API_PORT:-3000}"
     volumes:
       # Bind mount enables hot reload while named volumes protect container deps.
       - ./study-org-backend:/app
@@ -39,7 +39,7 @@ services:
       - backend_generated:/app/generated
     command: sh -c "npm run prisma:generate && npm run prisma:push && npm run dev"
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3071/"]
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:${API_PORT:-3000}/"]
       interval: 10s
       timeout: 5s
       retries: 5
