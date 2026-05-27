@@ -32,7 +32,7 @@ services:
       JWT_SECRET: ${JWT_SECRET:?set JWT_SECRET in .env}
       FRONTEND_URL: http://localhost:${FRONTEND_PORT:-4200}
     ports:
-      - "${API_PORT:-3000}:3000"
+      - "${API_PUBLIC_PORT:-3071}:3000"
 
   frontend:
     # Production Angular image served by a minimal Node.js static server.
@@ -47,6 +47,8 @@ services:
     depends_on:
       backend:
         condition: service_healthy
+    environment:
+      API_URL: ${API_URL:-http://studyorg.frameworksenac.com.br:3071}
     ports:
       - "${FRONTEND_PORT:-4200}:4200"
 

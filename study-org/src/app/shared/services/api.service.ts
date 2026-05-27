@@ -1,3 +1,5 @@
+import { API_BASE_URL } from '../../core/config/api.config';
+
 type ApiErrorPayload = {
   status: number;
   data: unknown;
@@ -7,10 +9,8 @@ type RequestOptions = RequestInit & {
   token?: string | null;
 };
 
-const API_BASE = (globalThis as { __env?: { API_URL?: string } }).__env?.API_URL ?? '/api';
-
 async function apiFetch<T>(path: string, options: RequestOptions = {}): Promise<T> {
-  const url = API_BASE.endsWith('/') || path.startsWith('/') ? `${API_BASE}${path}` : `${API_BASE}/${path}`;
+  const url = API_BASE_URL.endsWith('/') || path.startsWith('/') ? `${API_BASE_URL}${path}` : `${API_BASE_URL}/${path}`;
   const headers = new Headers(options.headers);
 
   if (options.token) {
@@ -67,4 +67,4 @@ function getApiErrorMessage(error: unknown): string {
   return 'Nao foi possivel comunicar com a API.';
 }
 
-export { API_BASE, apiFetch, getApiErrorMessage };
+export { API_BASE_URL, apiFetch, getApiErrorMessage };

@@ -1,12 +1,17 @@
-// Detect API URL based on environment
+type RuntimeEnv = {
+  API_URL?: string;
+};
+
+const normalizeBaseUrl = (value: string): string => value.replace(/\/+$/, '');
+
 const getApiUrl = (): string => {
-  // If running on studyorg.frameworksenac.com.br, use that domain
-  if (typeof window !== 'undefined' && window.location.hostname === 'studyorg.frameworksenac.com.br') {
-    return `http://studyorg.frameworksenac.com.br:3071`;
+  const runtimeEnv = (globalThis as { __env?: RuntimeEnv }).__env?.API_URL;
+
+  if (typeof runtimeEnv === 'string' && runtimeEnv.trim()) {
+    return normalizeBaseUrl(runtimeEnv.trim());
   }
-  
-  // Otherwise use localhost (development)
-  return 'http://localhost:3071';
+
+  return '/api';
 };
 
 export const API_BASE_URL = getApiUrl();

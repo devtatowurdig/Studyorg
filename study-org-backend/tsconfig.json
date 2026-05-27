@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
-    "module": "ESNext",
-    "moduleResolution": "node",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "target": "ES2023",
+    "ignoreDeprecations": "6.0",
     "strict": true,
     "esModuleInterop": true,
     "types": ["node"],
