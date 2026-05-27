@@ -10,7 +10,14 @@ import usersRouter from "./routes/users";
 const app = express();
 const port = process.env.API_PORT || 3000;
 
-app.use(cors());
+// Configure CORS to allow requests from frontend
+const corsOptions = {
+  origin: process.env.FRONTEND_URL || "http://localhost:3070",
+  credentials: true,
+  optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 app.get("/", (_req, res) => {
